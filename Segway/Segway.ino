@@ -1,7 +1,7 @@
 double pitch;
 
 int RMPin = 3;
-int LMPin = 5;
+int LMPin = 6;
 
 int RM;
 int LM;
@@ -23,7 +23,7 @@ void loop() {
   Serial.println(crunchPID(convertToPower(pitch)));
 
   //motorWrapper(RM, crunchPID(convertToPower(pitch)));
-  //motorWrapper(LM, crunchPID(convertToPower(pitch)));
-  analogWrite(LM, 250);
+  motorWrapper(RMPin, crunchPID(convertToPower(pitch)));
+  //analogWrite(LM, 250);
 
 }
