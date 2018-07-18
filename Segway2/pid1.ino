@@ -1,19 +1,19 @@
-#define P 15.5//0.001 0.01
+#define P 1.0//0.001 0.01
 #define I 0.0//0.002 0.01
 #define D 0.000//0.00025  0.0025
 #define dt 0.014
 
 #define CONT false
-#define MAX_IN 90
-#define MIN_IN -90
-#define MAX_OUT 20
-#define MIN_OUT -20
+#define MAX_IN -90
+#define MIN_IN 90
+#define MAX_OUT 100
+#define MIN_OUT -100
 
 double prevError = 0;
 double currentError = 0;
 double totalError = 0;
 
-double setPoint;
+double setPoint = 0;
 
 double crunchPID(double input) {
   double pValue, iValue, dValue;
