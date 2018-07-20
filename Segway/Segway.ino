@@ -22,8 +22,8 @@ void loop() {
   //Serial.print(" + ");
   //Serial.println(crunchPID(convertToPower(pitch)));
 
-  motorWrapper(LMPin, crunchPID(convertToPower(-pitch)));
-  motorWrapper(RMPin, crunchPID(convertToPower(pitch)));
+  motorWrapper(LMPin, crunchPID(convertToPower(pitch)));
+  motorWrapper(RMPin, crunchPID(convertToPower(-pitch)));
   //analogWrite(LM, 250);
 
 }
