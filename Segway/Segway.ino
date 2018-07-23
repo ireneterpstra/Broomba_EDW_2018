@@ -3,9 +3,6 @@ double pitch;
 int RMPin = 10;
 int LMPin = 9;
 
-int RM;
-int LM;
-
 void setup() {
   Serial.begin(9600);
 
@@ -16,7 +13,7 @@ void setup() {
 
 void loop() {
   loopMPU();
-  Serial.println  (pitch);
+  //Serial.println(pitch);
   //Serial.print(" + ");
   //Serial.print(convertToPower(pitch));
   //Serial.print(" + ");
