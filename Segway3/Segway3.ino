@@ -9,11 +9,11 @@ void setup() {
   setupMPU();
   setupMotors(RMPin, LMPin);
   setPIDSetpoint(0);
-  setupJoystick();
+  
 }
 
 void loop() {
-  loopJoystick();
+ 
   loopMPU();
   //Serial.println(pitch);
   //Serial.print(" + ");
