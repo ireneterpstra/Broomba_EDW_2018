@@ -5,7 +5,10 @@ boolean eStopOn = false;
 int RMPin = 10;
 int LMPin = 9;
 
-double MP;
+double LM;
+double RM;
+
+double turnFactor;
 
 void setup() {
   Serial.begin(9600);
@@ -21,7 +24,8 @@ void loop() {
   loopMPU();
   eStop();
   loopMPU();
-  MP = crunchPID(convertToPower(pitch));
+  LM = crunchPID(convertToPower(pitch) - turnFactor);
+  RM = crunchPID(convertToPower(-pitch) + turnFactor);
   loopMPU();
   Serial.print(pitch);
   //Serial.print(" + ");
@@ -30,14 +34,15 @@ void loop() {
   //Serial.println(crunchPID(convertToPower(pitch)));
   Serial.print(F(" : Emergency Stop on: "));
   Serial.print(eStopOn);
-  Serial.print(F(" : MP: "));
-  Serial.println(MP);
-  //Serial.println(" : RM: " + String(-MP));
+  Serial.print(F(" : LM: "));
+  Serial.print(LM);
+  Serial.print(" : RM: " + String(RM));
+  Serial.println(" Turn Factor  " + String(turnFactor));
   loopMPU();
 
 
-  motorWrapper(LMPin, RMPin, MP);
-  //motorWrapper(RMPin, -MP);
+  motorWrapper(LMPin, LM);
+  motorWrapper(RMPin, RM);
   //analogWrite(LM, 250);
 
 }
