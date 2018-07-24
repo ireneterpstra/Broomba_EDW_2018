@@ -13,9 +13,11 @@ void setup() {
   setupMPU();
   setupMotors(RMPin, LMPin);
   setPIDSetpoint(0);
+  setupJoystick();
 }
 
 void loop() {
+  loopJoystick();
   loopMPU();
   eStop();
   loopMPU();
