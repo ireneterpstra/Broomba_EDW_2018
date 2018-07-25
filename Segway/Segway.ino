@@ -25,7 +25,7 @@ void loop() {
   eStop();
   loopMPU();
   LM = crunchPID(convertToPower(pitch) - turnFactor);
-  RM = crunchPID(convertToPower(-pitch) + turnFactor);
+  RM = crunchPID(convertToPower(-pitch) - turnFactor);
   loopMPU();
   Serial.print(pitch);
   //Serial.print(" + ");

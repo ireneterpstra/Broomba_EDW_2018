@@ -19,10 +19,13 @@ void loopJoystick() {
 //  Serial.println(analogRead(Y_pin));
 //  Serial.print("\n\n");
   
- int potXValue = analogRead(A1); // Read potentiometer value
+  int potXValue = analogRead(A1); // Read potentiometer value
   //int potYValue = analogRead(A1);
- turnFactor = map(potXValue, 0, 1023, -10 , 10); // Map the potentiometer value from jydrt
   
+  turnFactor = map(potXValue, 0, 1023, -10 , 10); // Map the potentiometer value from jydrt
+  if (turnFactor >= -1 && turnFactor < 1){
+    turnFactor = 0;
+  }
  //analogWrite(5, pwmXOutput); // Send PWM signal to L298N Enable pin
  //analogWrite(6, 100 - pwmXOutput); // Send PWM signal to L298N Enable pin
 

@@ -1,7 +1,4 @@
 /* Motor power function*/
-
-
-
 void setupMotors(int M1, int M2){
   pinMode(M1, OUTPUT);
   pinMode(M2, OUTPUT);
