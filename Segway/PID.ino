@@ -6,8 +6,8 @@
 #define CONT false
 #define MAX_IN 90
 #define MIN_IN -90
-#define MAX_OUT 100
-#define MIN_OUT -100
+#define MAX_OUT 90
+#define MIN_OUT -90
 
 double prevError = 0;
 double currentError = 0;
