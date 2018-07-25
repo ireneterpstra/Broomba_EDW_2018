@@ -1,6 +1,6 @@
 double pitch;
 
-boolean eStopOn = false;
+boolean eStopOn;
 
 int RMPin = 10;
 int LMPin = 9;
@@ -17,6 +17,7 @@ void setup() {
   setupMotors(RMPin, LMPin);
   setPIDSetpoint(0);
   setupJoystick();
+  eStopOn = true;
 }
 
 void loop() {
@@ -25,6 +26,7 @@ void loop() {
   eStop();
   loopMPU();
   LM = crunchPID(convertToPower(pitch) - turnFactor);
+  loopMPU();
   RM = crunchPID(convertToPower(-pitch) - turnFactor);
   loopMPU();
   Serial.print(pitch);
