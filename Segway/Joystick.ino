@@ -6,6 +6,11 @@ const int Y_pin = 1; // analog pin connected to Y output
 void setupJoystick() {
   pinMode(SW_pin, INPUT);
   digitalWrite(SW_pin, HIGH);
+
+pinMode(9, OUTPUT);
+pinMode(10, OUTPUT);
+  // initialize the pushbutton pin as an input:
+pinMode(4, INPUT);
 }
 
 void loopJoystick() {
@@ -18,7 +23,17 @@ void loopJoystick() {
 //  Serial.print("Y-axis: ");
 //  Serial.println(analogRead(Y_pin));
 //  Serial.print("\n\n");
-  
+buttonState = digitalRead(buttonPin);
+
+if (buttonState == HIGH) {
+    // turn LED on:
+    digitalWrite(9, HIGH);
+    digitalWrite(10, HIGH);
+  } else {
+    // turn LED off:
+    digitalWrite(9, LOW);
+    digitalWrite(10, LOW);
+
   int potXValue = analogRead(A1); // Read potentiometer value
   //int potYValue = analogRead(A1);
   
