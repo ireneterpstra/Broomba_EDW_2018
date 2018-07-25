@@ -1,3 +1,6 @@
+enum State {STARTUP, RUN, E_STOP};
+uint8_t state = STOP;
+
 double pitch;
 
 boolean eStopOn;
@@ -9,6 +12,20 @@ double LM;
 double RM;
 
 double turnFactor;
+
+void serialOutput(){
+  Serial.print(pitch);
+  //Serial.print(" + ");
+  //Serial.print(convertToPower(pitch));
+  //Serial.print(" + ");
+  //Serial.println(crunchPID(convertToPower(pitch)));
+  Serial.print(F(" : Emergency Stop on: "));
+  Serial.print(eStopOn);
+  Serial.print(F(" : LM: "));
+  Serial.print(LM);
+  Serial.print(" : RM: " + String(RM));
+  Serial.println(" Turn Factor  " + String(turnFactor));
+}
 
 void setup() {
   Serial.begin(9600);
@@ -23,29 +40,42 @@ void setup() {
 void loop() {
   loopMPU();
   loopJoystick();
-  loopMPU();
-  eStop();
-  loopMPU();
-  LM = crunchPID(convertToPower(pitch) - turnFactor);
-  loopMPU();
-  RM = crunchPID(convertToPower(-pitch) - turnFactor);
-  loopMPU();
-  Serial.print(pitch);
-  //Serial.print(" + ");
-  //Serial.print(convertToPower(pitch));
-  //Serial.print(" + ");
-  //Serial.println(crunchPID(convertToPower(pitch)));
-  Serial.print(F(" : Emergency Stop on: "));
-  Serial.print(eStopOn);
-  Serial.print(F(" : LM: "));
-  Serial.print(LM);
-  Serial.print(" : RM: " + String(RM));
-  Serial.println(" Turn Factor  " + String(turnFactor));
-  loopMPU();
+  serialOutput();
+  
+  switch(state){
+    case STARTUP:
+      LM = 0;
+      RM = 0;
+      if(pitch > -1 && pitch < 1){
+        state = RUN;
+      }
+      break;
+    case RUN:
+      LM = crunchPID(convertToPower(pitch) - turnFactor);
+      RM = crunchPID(convertToPower(-pitch) - turnFactor);
+      if(pitch > 12 || pitch < -12){
+        state = E_STOP;
+      }
+      break;
+    case E_STOP:
+      LM = 0;
+      RM = 0;
+      if(pitch > -1 && pitch < 1){
+        state = RUN;
+      }
+      break;
+  }
+  
+//  loopMPU();
+//  //eStop();
+//  loopMPU();
+//  LM = crunchPID(convertToPower(pitch) - turnFactor);
+//  loopMPU();
+//  RM = crunchPID(convertToPower(-pitch) - turnFactor);
+//  loopMPU();
+//  loopMPU();
 
 
   motorWrapper(LMPin, LM);
   motorWrapper(RMPin, RM);
-  //analogWrite(LM, 250);
-
 }

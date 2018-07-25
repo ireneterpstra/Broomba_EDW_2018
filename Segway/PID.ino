@@ -1,11 +1,11 @@
-#define P 1.6//0.001 0.01
+#define P 0.5//0.001 0.01
 #define I 0.0//0.002 0.01
 #define D 0.005//0.00025  0.0025
 #define dt 0.014
 
 #define CONT false
-#define MAX_IN 90
-#define MIN_IN -90
+#define MAX_IN 65
+#define MIN_IN -65
 #define MAX_OUT 90
 #define MIN_OUT -90
 
