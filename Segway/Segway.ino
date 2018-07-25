@@ -21,6 +21,7 @@ void setup() {
 }
 
 void loop() {
+  loopMPU();
   loopJoystick();
   loopMPU();
   eStop();
