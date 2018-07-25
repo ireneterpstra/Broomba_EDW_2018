@@ -1,9 +1,10 @@
-enum State {STARTUP, RUN, E_STOP};
-uint8_t state = STOP;
+enum State {INITIALIZE, RUN, E_STOP};
+uint8_t state = INITIALIZE;
 
 double pitch;
 
 boolean eStopOn;
+boolean buttonPressed;
 
 int RMPin = 10;
 int LMPin = 9;
@@ -24,7 +25,9 @@ void serialOutput(){
   Serial.print(F(" : LM: "));
   Serial.print(LM);
   Serial.print(" : RM: " + String(RM));
-  Serial.println(" Turn Factor  " + String(turnFactor));
+  Serial.print(" Turn Factor  " + String(turnFactor));
+  Serial.print(" Button Pressed  " + String(buttonPressed));
+  Serial.println(" State  " + state);
 }
 
 void setup() {
@@ -35,6 +38,7 @@ void setup() {
   setPIDSetpoint(0);
   setupJoystick();
   eStopOn = true;
+  //Calibration Code
 }
 
 void loop() {
@@ -43,27 +47,52 @@ void loop() {
   serialOutput();
   
   switch(state){
-    case STARTUP:
+    case INITIALIZE: // (Pause State / Inert Pause)
       LM = 0;
       RM = 0;
-      if(pitch > -1 && pitch < 1){
-        state = RUN;
-      }
-      break;
-    case RUN:
-      LM = crunchPID(convertToPower(pitch) - turnFactor);
-      RM = crunchPID(convertToPower(-pitch) - turnFactor);
-      if(pitch > 12 || pitch < -12){
+      //Check Battery Power for 9/12V batteries
+      //System Check
+      //PowerUp self test
+      //make complicated start function / press button / wiggle joystick 3 times
+      if(buttonPressed){
         state = E_STOP;
       }
       break;
-    case E_STOP:
+
+    // Add case for just balancing / mounting the segway? (gain is different than for when someone is on it) Pause?
+    
+    case RUN: //  (Normal / Emergency Stop -> vertical w person)
+      LM = crunchPID(convertToPower(pitch) - turnFactor);
+      RM = crunchPID(convertToPower(-pitch) - turnFactor); // change turn factor for going backwards
+      if(pitch > 12 || pitch < -12){ // Approaching critical speed forces a vertical realignment (get max speed from current)
+        state = E_STOP;
+      } else if (buttonPressed){ // Accidental press? diffrent sensor / X forward + hit button (need dead zone)
+        state = E_STOP; 
+      }
+      break;
+    case E_STOP: // -> dont stop, get rider vertical
       LM = 0;
       RM = 0;
       if(pitch > -1 && pitch < 1){
         state = RUN;
       }
       break;
+      
+    //Add resistor to handels and measure wether you are not holding it
+
+    //Right Segway -> vertical realignment
+    //Get off mode? Pause?
+    //Power down state?
+
+    //Need user feedback to indicate state / how critical your position/speed is
+
+    //Calibrate -> need to fix what vertical means
+    //Inert
+    //Self-Standing
+    //Run
+    //Stop
+    //EmergencyStop
+
   }
   
 //  loopMPU();
