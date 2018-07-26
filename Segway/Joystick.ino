@@ -3,6 +3,8 @@ const int SW_pin = 4; // digital pin connected to switch output
 const int X_pin = A1; // analog pin connected to X output
 const int Y_pin = A0; // analog pin connected to Y output
 
+int buttonState;
+
 void setupJoystick() {
   pinMode(SW_pin, INPUT);
   digitalWrite(SW_pin, HIGH);
@@ -21,18 +23,40 @@ void loopJoystick() {
 //  Serial.println(analogRead(Y_pin));
 //  Serial.print("\n\n");
 
-  int buttonState = digitalRead(SW_pin);
-  if (buttonState == HIGH) {
-    buttonPressed = true;
-  } else {
-    buttonPressed = false;
-  }
-
-  int potXValue = analogRead(X_pin); // Read potentiometer value
-  int potYValue = analogRead(A1);
+  buttonState = digitalRead(SW_pin);
+  X_val = analogRead(X_pin); // Read potentiometer value
+  Y_val = analogRead(Y_pin);
   
-  turnFactor = map(potXValue, 0, 1023, -10 , 10); // Map the potentiometer value from jydrt
-  if (turnFactor >= -1 && turnFactor < 1){
-    turnFactor = 0;
+  setTurnFactor();
+}
+
+boolean buttonPressed(){
+  if (buttonState == HIGH) {
+    return false;
+  } else {
+    return true;
   }
 }
+
+boolean Y_down(){
+  return Y_val < 100;
+}
+
+boolean Y_up(){
+  return Y_val > 900;
+}
+
+boolean X_right(){
+  return X_val > 900;
+}
+
+boolean X_left(){
+  return X_val < 100;
+}
+
+
+
+
+
+
+
