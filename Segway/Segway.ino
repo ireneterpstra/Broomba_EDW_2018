@@ -22,7 +22,7 @@ void serialOutput(){
   //Serial.println(crunchPID(convertToPower(pitch)));
   Serial.print(" : LM: " + String(LM));
   Serial.print(" : RM: " + String(RM));
-  Serial.print(" Turn Factor  " + String(turnFactor));
+  //Serial.print(" Turn Factor  " + String(turnFactor));
   //Serial.print(" X_val  " + String(X_val));
   //Serial.print(" Y_val  " + String(Y_val));
   //Serial.print(" Button Pressed  " + String(buttonPressed()));
@@ -34,6 +34,8 @@ void setup() {
   setupMPU();
   setupMotors(RMPin, LMPin);
   setPIDSetpoint(0);
+  setPIDSetpointS(0);
+  setPIDSetpointSt(0);
   setupJoystick();
   //Calibration Code
 }
@@ -60,17 +62,17 @@ void loop() {
       RM = 0;
       if(inertToCal()){
         state = CALIBRATE;
-      } else if(inertToSS()){
-        state = SELF_STANDING;
+      } else if(goToTestState()){
+        state = RUN;
       }
       break;
     case SELF_STANDING: // riderless balancing, waits for rider -> run
       Serial.println(" SELF_STANDING");
-      LM = crunchPIDs(convertToPower(pitch));
-      RM = crunchPIDs(convertToPower(-pitch));
+      LM = crunchPIDs(convertToPower(pitch+14.9));
+      RM = crunchPIDs(convertToPower(-pitch-14.9));  // use inv tan instead of prop control for better results
       
-      if(ssToRun()){
-        state = RUN;
+      if(backToInert()){
+        state = INERT;
       }
       break;
     case RUN: // normal operation -> stop, eStop
@@ -78,10 +80,10 @@ void loop() {
       LM = crunchPID(convertToPower(pitch) - turnFactor);
       RM = crunchPID(convertToPower(-pitch) - turnFactor);
       
-      if(runToStop()){
-        state = STOP;
+      if(backToInert()){
+        state = INERT;
       } else if (runToEStop()){
-        state = ESTOP;
+        state = INERT;
       }
       break;
     case STOP: // get rider vertical, end condition -> run, inert

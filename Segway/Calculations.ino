@@ -12,9 +12,9 @@ int convertToPower(double pitch){
 
 void setTurnFactor(){
   if (X_val > 550){
-    turnFactor = map(X_val, 550, 1023, 0 , 10);
+    turnFactor = map(X_val, 550, 1023, 0 , 30);
   } else if (X_val < 480){
-    turnFactor = map(X_val, 0, 480, -10 , 0);
+    turnFactor = map(X_val, 0, 480, -30 , 0);
   } else {
     turnFactor = 0;
   }

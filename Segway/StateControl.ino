@@ -39,3 +39,13 @@ boolean stopToInert(){
 boolean eStopToStop(){
   return buttonPressed() && Y_up();
 }
+
+// Test transitions -----------------------------------------------
+boolean goToTestState(){
+  return buttonPressed() && Y_up();
+}
+boolean backToInert(){
+  return buttonPressed() && Y_down();
+}
+
+

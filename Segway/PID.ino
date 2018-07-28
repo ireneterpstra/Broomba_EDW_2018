@@ -1,6 +1,6 @@
-#define P 0.5//0.001 0.01
+#define P 1.0//0.001 0.01
 #define I 0.0//0.002 0.01
-#define D 0.005//0.00025  0.0025
+#define D 0.01//0.00025  0.0025
 #define dt 0.014
 
 #define CONT false

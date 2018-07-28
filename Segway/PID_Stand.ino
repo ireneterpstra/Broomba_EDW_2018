@@ -1,5 +1,5 @@
-#define Ps 2.5//0.001 0.01
-#define Is 0.0//0.002 0.01
+#define Ps 0.07//0.001 0.01
+#define Is 0.005//0.002 0.01
 #define Ds 0.005//0.00025  0.0025
 #define dts 0.014
 
