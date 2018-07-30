@@ -9,6 +9,8 @@ double pitch;
 int RMPin = 10;
 int LMPin = 9;
 
+//int sPin = 13;
+
 double LM = 0;
 double RM = 0;
 
@@ -28,6 +30,15 @@ void serialOutput(){
   //Serial.print(" Button Pressed  " + String(buttonPressed()));
 }
 
+boolean switched(){
+  int buttonState = digitalRead(sPin);
+  if (buttonState == HIGH) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 void setup() {
   Serial.begin(9600);
 
@@ -38,6 +49,8 @@ void setup() {
   setPIDSetpointSt(0);
   setupJoystick();
   //Calibration Code
+
+//  pinMode(sPin, INPUT_PULLUP);
 }
 
 void loop() {
@@ -46,6 +59,8 @@ void loop() {
   loopMPU();
   serialOutput();
   loopMPU();
+//  Serial.print("Switched: " + String(switched()));
+
 
 
   switch(state){
