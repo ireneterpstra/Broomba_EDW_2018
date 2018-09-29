@@ -13,10 +13,10 @@ int convertToPower(double pitch){
 
 /*Converts joystick X_Value (0, 1023) to (-30, 30) turn value*/
 void setTurnFactor(){
-  if (X_val > 550){
-    turnFactor = map(X_val, 550, 1023, 0 , 30);
-  } else if (X_val < 480){
-    turnFactor = map(X_val, 0, 480, -30 , 0);
+  if (Y_val > 550){
+    turnFactor = map(Y_val, 550, 1023, 0 , 20);
+  } else if (Y_val < 480){
+    turnFactor = map(Y_val, 0, 480, -20 , 0);
   } else {
     turnFactor = 0;
   }

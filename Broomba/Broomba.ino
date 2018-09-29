@@ -8,7 +8,7 @@
 /*States*/
 enum State {CALIBRATE, INERT, SELF_STANDING, RUN, STOP, ESTOP};
 /*Starting State*/
-uint8_t state = INERT;
+uint8_t state = RUN;
 
 /*Joystick values*/
 int X_val;
@@ -18,14 +18,17 @@ int Y_val;
 double pitch;
 
 /*Motor Pins*/
-int RMPin = 10;
-int LMPin = 9;
+int RMPin1 = 11;
+int RMPin2 = 10;
+int LMPin1 = 9;
+int LMPin2 = 3;
 /*Secondary switch pin*/
 //int sPin = 13;
 
 /*Motor Powers (set in each state)*/
 double LM = 0;
 double RM = 0;
+double power;
 /*Turning factor*/
 double turnFactor;
 
@@ -60,7 +63,7 @@ void setup() {
   Serial.begin(9600);
 
   setupMPU();
-  setupMotors(RMPin, LMPin);
+  setupMotors(RMPin1, RMPin2, LMPin1, LMPin2);
   setPIDSetpoint(0);
   setPIDSetpointS(0);
   setPIDSetpointSt(0);
@@ -116,8 +119,9 @@ void loop() {
 /*RUN: normal operation -> stop, eStop ---------------------------------------------------*/
     case RUN: 
       Serial.println(" RUN");
-      LM = crunchPID(convertToPower(pitch) - turnFactor);
-      RM = crunchPID(convertToPower(-pitch) - turnFactor);
+      power = crunchPID(convertToPower(pitch));
+      LM = power + turnFactor;
+      RM = power - turnFactor;
       
       if(backToInert()){
         state = INERT;
@@ -217,6 +221,8 @@ void loop() {
 
 
 /*Input final calculated power to motors*/
-  motorWrapper(LMPin, LM);
-  motorWrapper(RMPin, RM);
+  motorWrapper(LMPin1, LM);
+  motorWrapper(LMPin2, LM);
+  motorWrapper(RMPin1, RM);
+  motorWrapper(RMPin2, RM);
 }
