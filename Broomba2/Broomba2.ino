@@ -40,17 +40,15 @@ void serialOutput(){
   Serial.print(" + ");
   Serial.print(String(turn));
   Serial.print(" + ");
-  Serial.print("Power: " + String(power));
-  Serial.print(" + ");
-//  Serial.print(convertToPower(pitch));
-  Serial.print(" + ");
+  //Serial.print(convertToPower(pitch));
+  //Serial.print(" + ");
   //Serial.println(crunchPID(convertToPower(pitch)));
   Serial.print(" : LM: " + String(LM));
   Serial.print(" : RM: " + String(RM));
-  Serial.print(" Turn Factor  " + String(turnFactor));
-//  Serial.print(" X_val  " + String(X_val));
-//  Serial.print(" Y_val  " + String(Y_val));
-//  Serial.print(" Button Pressed  " + String(buttonPressed()));
+  //Serial.print(" Turn Factor  " + String(turnFactor));
+  Serial.print(" X_val  " + String(X_val));
+  Serial.print(" Y_val  " + String(Y_val));
+  Serial.print(" Button Pressed  " + String(buttonPressed()));
   //Serial.print("Switched: " + String(switched()));
 }
 
@@ -104,10 +102,9 @@ void loop() {
       Serial.println(" INERT");
       LM = 0;
       RM = 0;
-//      if(inertToCal()){
-//        state = CALIBRATE;
-//      } else 
-      if(goToTestState()){
+      if(inertToCal()){
+        state = CALIBRATE;
+      } else if(goToTestState()){
         state = RUN;
       }
       break;
@@ -127,13 +124,12 @@ void loop() {
     case RUN: 
       Serial.println(" RUN");
       power = crunchPID(convertToPower(pitch));
-      turn = crunchPIDt(turnFactor);
-      LM = power - turnFactor;
-      RM = power + turnFactor;
+      LM = power + turnFactor;
+      RM = power - turnFactor;
       
       if(backToInert()){
         state = INERT;
-      }else if (runToEStop()){
+      } else if (runToEStop()){
         state = INERT;
       }
       break;
