@@ -70,9 +70,9 @@ void setup() {
   setupMPU();
   setupMotors(RMPin1, RMPin2, LMPin1, LMPin2);
   setPIDSetpoint(0);
-  setPIDSetpointS(0);
-  setPIDSetpointSt(0);
-  setPIDSetpointT(0);
+//  setPIDSetpointS(0);
+//  setPIDSetpointSt(0);
+//  setPIDSetpointT(0);
   setupJoystick();
   //Calibration Code
 
@@ -115,8 +115,8 @@ void loop() {
 /*SELF_STANDING: riderless balancing, waits for rider -> run -----------------------------*/
     case SELF_STANDING: 
       Serial.println(" SELF_STANDING");
-      LM = crunchPIDs(convertToPower(pitch+14.9));
-      RM = crunchPIDs(convertToPower(-pitch-14.9));  // use inv tan instead of prop control for better results
+//      LM = crunchPIDs(convertToPower(pitch+14.9));
+//      RM = crunchPIDs(convertToPower(-pitch-14.9));  // use inv tan instead of prop control for better results
       
       if(backToInert()){
         state = INERT;
@@ -126,8 +126,8 @@ void loop() {
 /*RUN: normal operation -> stop, eStop ---------------------------------------------------*/
     case RUN: 
       Serial.println(" RUN");
-      power = crunchPID(convertToPower(pitch));
-      turn = crunchPIDt(turnFactor);
+      power = crunchPID(convertToPower(-pitch));
+//      turn = crunchPIDt(turnFactor);
       LM = power - turnFactor;
       RM = power + turnFactor;
       
@@ -141,8 +141,8 @@ void loop() {
 /*STOP: get rider vertical, end condition -> run, inert-----------------------------------*/
     case STOP: 
       Serial.println(" STOP");
-      LM = crunchPIDst(convertToPower(pitch));
-      RM = crunchPIDst(convertToPower(-pitch));
+//      LM = crunchPIDst(convertToPower(pitch));
+//      RM = crunchPIDst(convertToPower(-pitch));
       
       if(stopToRun()){
         state = RUN;
@@ -154,8 +154,8 @@ void loop() {
 /*ESTOP: get rider vertical in case of emergency, accompanied by warning -> stop ---------*/
     case ESTOP: 
       Serial.println(" ESTOP");
-      LM = crunchPIDst(convertToPower(pitch));
-      RM = crunchPIDst(convertToPower(-pitch));
+//      LM = crunchPIDst(convertToPower(pitch));
+//      RM = crunchPIDst(convertToPower(-pitch));
 
       // add warning noise
       
@@ -232,4 +232,5 @@ void loop() {
   motorWrapper(LMPin2, LM);
   motorWrapper(RMPin1, RM);
   motorWrapper(RMPin2, RM);
+  delay(100);
 }
