@@ -8,10 +8,10 @@ void setupMotors(int M1, int M2, int M3, int M4){
 
 /*Converts power input (-100, 100) into PWM accepted by speed contolers (124, 253)*/
 void motorWrapper(int motor, int motorPower){
-  if (motorPower > 1){
-    motorPower = motorPower + 5;
-  } else if (motorPower < -1){
-    motorPower = motorPower - 5; 
+  if (motorPower > 2){
+    motorPower = motorPower + 3.5;
+  } else if (motorPower < -2){
+    motorPower = motorPower - 3.5; 
   }
   int power =  map(motorPower, -100, 100, 124, 253); //Divide motor power by range of expected input (in this case it is [-100, 100])
   //Serial.println(power);

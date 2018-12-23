@@ -1,9 +1,10 @@
+#include <Math.h>
 /*
- * Irene Terpstra
- * 12/27/2018 
- * EDW 2018 - Broomba
- * Tester for possible memory leak
- */
+   * Irene Terpstra
+   * 12/27/2018 
+   EDW 2018 - Broomba
+   Tester for possible memory leak
+   */
 
 /*States*/
 enum State {INERT, RUN};
@@ -16,6 +17,7 @@ int Y_val;
 
 /*Pitch from IMU*/
 double pitch;
+double previousPitch;
 
 /*Motor Pins*/
 int RMPin1 = 11;
@@ -33,24 +35,26 @@ double power;
 double turnFactor;
 double turn;
 
+double centerIMU = -3;
+
 
 /*All serial output (keeps everything neat)*/
-void serialOutput(){
-  Serial.print(pitch);
+void serialOutput() {
+  Serial.print(pitch - centerIMU);
   Serial.print(" + ");
-  Serial.print(String(turn));
+  Serial.print("Total Error: " + String(getTotError()));
   Serial.print(" + ");
   Serial.print("Power: " + String(power));
   Serial.print(" + ");
-//  Serial.print(convertToPower(pitch));
-  Serial.print(" + ");
+  //  Serial.print(convertToPower(pitch));
+  //Serial.print(" + ");
   //Serial.println(crunchPID(convertToPower(pitch)));
-  Serial.print(" : LM: " + String(LM));
-  Serial.print(" : RM: " + String(RM));
-  Serial.print(" Turn Factor  " + String(turnFactor));
-//  Serial.print(" X_val  " + String(X_val));
-//  Serial.print(" Y_val  " + String(Y_val));
-//  Serial.print(" Button Pressed  " + String(buttonPressed()));
+  //  Serial.print(" : LM: " + String(LM));
+  //  Serial.print(" : RM: " + String(RM));
+  //  Serial.print(" Turn Factor  " + String(turnFactor));
+  //  Serial.print(" X_val  " + String(X_val));
+  //  Serial.print(" Y_val  " + String(Y_val));
+  //  Serial.print(" Button Pressed  " + String(buttonPressed()));
   //Serial.print("Switched: " + String(switched()));
 }
 
@@ -72,51 +76,67 @@ void setup() {
   setPIDSetpoint(0);
   setupJoystick();
   //Calibration Code
+
+
+  //setup interrupts
+//  TIMSK2 = (TIMSK2 & B11111110) | 0x01; //turns on interrupt on timer 2
+//  TCCR2B = (TCCR2B & B11111000) | 0x06; //prescalar of 128
+//  TIMSK0 = (TIMSK2 & B11111110) | 0x01; //turns on interrupt on timer 2
+//  TCCR0B = (TCCR2B & B11111000) | 0x05; //prescalar of 128
 }
 
 void loop() {
+  //Serial.println("WHATSUP DUDE");
   loopMPU();
   loopJoystick();
-  loopMPU();
   serialOutput();
-  loopMPU();
 
 
-/*State Machine controls what state the segway is in*/
-  switch(state){
-    
-/*INERT: no movement, initial state -> self_standing, calibrate --------------------------*/
-    case INERT: 
+  int tempePitch = -pitch + centerIMU;
+  if (tempePitch > 0) {
+    power = crunchPID(pow(tempePitch, 0.6));
+  } else {
+    power = crunchPID(-pow(-tempePitch, 0.6));
+  }
+
+
+
+  /*State Machine controls what state the segway is in*/
+  switch (state) {
+
+    /*INERT: no movement, initial state -> self_standing, calibrate --------------------------*/
+    case INERT:
       Serial.println(" INERT");
       LM = 0;
       RM = 0;
-//      if(inertToCal()){
-//        state = CALIBRATE;
-//      } else 
-      if(goToTestState()){
+      //      if(inertToCal()){
+      //        state = CALIBRATE;
+      //      } else
+      if (goToTestState()) {
         state = RUN;
       }
       break;
-      
-/*RUN: normal operation -> stop, eStop ---------------------------------------------------*/
-    case RUN: 
+
+    /*RUN: normal operation -> stop, eStop ---------------------------------------------------*/
+    case RUN:
       Serial.println(" RUN");
-      power = crunchPID(convertToPower(-pitch));
-      LM = power - turnFactor;
-      RM = power + turnFactor;
-      
-      if(backToInert()){
+
+      LM = power; //- turnFactor;
+      RM = power; //+ turnFactor;
+
+      if (backToInert()) {
         state = INERT;
-      }else if (runToEStop()){
+      } else if (runToEStop()) {
         state = INERT;
       }
       break;
   }
 
-/*Input final calculated power to motors*/
+  /*Input final calculated power to motors*/
   motorWrapper(LMPin1, LM);
   motorWrapper(LMPin2, LM);
   motorWrapper(RMPin1, RM);
   motorWrapper(RMPin2, RM);
-  delay(100);
 }
+
+
