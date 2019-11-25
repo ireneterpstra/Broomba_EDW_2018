@@ -17,7 +17,7 @@ void setup() {
 void loop() {
   loopMPU();
 
-  if (pitch > 0)
+  if (pitch > 0){
     analogWrite(LMPin, 250);
   } else {
     analogWrite(LMPin, 180);
@@ -26,5 +26,7 @@ void loop() {
   
   //motorWrapper(LMPin, crunchPID(convertToPower(pitch)));
   //analogWrite(LM, 250);
+
+  delay(100);
 
 }

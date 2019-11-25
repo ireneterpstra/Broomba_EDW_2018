@@ -1,15 +1,13 @@
-#define P 12.0//0.001 0.01 1.0
-#define I 7.2//0.002 0.01 1.0
-#define D 0.05 //0.000//0.00025  0.0025 0.005
+#define P 1.0//0.001 0.01
+#define I 1.0//0.002 0.01
+#define D 0.005//0.00025  0.0025
 #define dt 0.014
 
 #define CONT false
 #define MAX_IN 65
 #define MIN_IN -65
-#define MAX_OUT 50
-#define MIN_OUT -50
-
-#define MAXiError (MAX_OUT/I/dt)
+#define MAX_OUT 90
+#define MIN_OUT -90
 
 double prevError = 0;
 double currentError = 0;
@@ -28,11 +26,11 @@ double crunchPID(double input) {
   }
 
   if (currentError * P < MAX_OUT && currentError * P > MIN_OUT) {
+
     totalError += currentError;
   } else {
     totalError = 0;
   }
-  totalError = constrain(totalError, -MAXiError, MAXiError);
 
   //pValue = Math.abs(currentError) < acceptableRange ? 0: p * currentError;
   pValue = P * currentError;
@@ -47,10 +45,6 @@ double crunchPID(double input) {
 
 void setPIDSetpoint(double val) {
   setPoint = val;
-}
-
-double getTotError(){
-  return totalError;
 }
 
 

@@ -12,8 +12,8 @@ enum State {INERT, RUN};
 uint8_t state = RUN;
 
 /*Joystick values*/
-int X_val;
-int Y_val;
+//int X_val;
+//int Y_val;
 
 /*Pitch from IMU*/
 double pitch;
@@ -32,8 +32,8 @@ double LM = 0;
 double RM = 0;
 double power;
 /*Turning factor*/
-double turnFactor;
-double turn;
+//double turnFactor;
+//double turn;
 
 double centerIMU = -3;
 
@@ -74,7 +74,7 @@ void setup() {
   setupMPU();
   setupMotors(RMPin1, RMPin2, LMPin1, LMPin2);
   setPIDSetpoint(0);
-  setupJoystick();
+  //setupJoystick();
   //Calibration Code
 
 
@@ -88,7 +88,7 @@ void setup() {
 void loop() {
   //Serial.println("WHATSUP DUDE");
   loopMPU();
-  loopJoystick();
+  //loopJoystick();
   serialOutput();
 
 
@@ -112,9 +112,6 @@ void loop() {
       //      if(inertToCal()){
       //        state = CALIBRATE;
       //      } else
-      if (goToTestState()) {
-        state = RUN;
-      }
       break;
 
     /*RUN: normal operation -> stop, eStop ---------------------------------------------------*/
@@ -124,9 +121,7 @@ void loop() {
       LM = power; //- turnFactor;
       RM = power; //+ turnFactor;
 
-      if (backToInert()) {
-        state = INERT;
-      } else if (runToEStop()) {
+      if (runToEStop()) {
         state = INERT;
       }
       break;
@@ -137,6 +132,8 @@ void loop() {
   motorWrapper(LMPin2, LM);
   motorWrapper(RMPin1, RM);
   motorWrapper(RMPin2, RM);
+
+  //delay(50);
 }
 
 

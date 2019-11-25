@@ -254,6 +254,8 @@ void loopMPU() {
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
 
+    delay(100);
+
     // check for overflow (this should never happen unless our code is too inefficient)
     if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
         // reset so we can continue cleanly

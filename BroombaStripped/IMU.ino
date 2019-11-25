@@ -155,14 +155,19 @@ void loopMPU() {
         mpu.resetFIFO();
         Serial.println(F("FIFO overflow!"));
 
+        delay(100);
+
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
     } else if (mpuIntStatus & 0x02) {
         // wait for correct available data length, should be a VERY short wait
         while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
+        delay(50);
         // read a packet from FIFO
         mpu.getFIFOBytes(fifoBuffer, packetSize);
         mpu.resetFIFO(); // ---------------------------------------------------------------------------> fixes FIFO overflow error
+        delay(50);
+        
         
         // track FIFO count here in case there is > 1 packet available
         // (this lets us immediately read more without waiting for an interrupt)
